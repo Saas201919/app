@@ -1,7 +1,11 @@
+
 import React from 'react';
-import { StyleSheet, TouchableOpacity, Text, Image } from 'react-native';
+import { StyleSheet, TouchableOpacity, Text, View, Image, Dimensions } from 'react-native';
 import { Link } from 'expo-router';
-import { LinearGradient } from 'expo-linear-gradient';
+import { useColorScheme } from '@/hooks/useColorScheme';
+import Colors from '@/constants/Colors';
+
+const { width } = Dimensions.get('window');
 
 interface PlaceCardProps {
   id: string;
@@ -12,64 +16,66 @@ interface PlaceCardProps {
 }
 
 export function PlaceCard({ id, name, image, description, route }: PlaceCardProps) {
+  const colorScheme = useColorScheme();
+  
   return (
-    <Link href={route as any} asChild>
-      <TouchableOpacity 
-        style={styles.container}
-        activeOpacity={0.9}
-      >
-        <Image 
-          source={image}
-          style={styles.image}
-          resizeMode="cover"
-        />
-        <LinearGradient
-          colors={['transparent', 'rgba(0,0,0,0.7)']}
-          style={styles.gradient}
+    <View style={styles.container}>
+      <Link href={route} asChild>
+        <TouchableOpacity 
+          style={[
+            styles.card, 
+            { borderColor: colorScheme === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)' }
+          ]}
+          activeOpacity={0.8}
         >
-          <Text style={styles.name}>
-            {name}
-          </Text>
-          <Text style={styles.description}>
-            {description.length > 50 ? description.substring(0, 50) + '...' : description}
-          </Text>
-        </LinearGradient>
-      </TouchableOpacity>
-    </Link>
+          <Image source={image} style={styles.image} />
+          <View style={styles.content}>
+            <Text style={[styles.name, { color: Colors[colorScheme].text }]}>
+              {name}
+            </Text>
+            <Text 
+              style={[styles.description, { color: Colors[colorScheme].textSecondary }]} 
+              numberOfLines={2}
+            >
+              {description}
+            </Text>
+          </View>
+        </TouchableOpacity>
+      </Link>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    width: 250,
-    height: 180,
-    marginRight: 15,
+    marginRight: 12,
+    width: width * 0.75,
+    maxWidth: 300,
+  },
+  card: {
     borderRadius: 12,
     overflow: 'hidden',
+    borderWidth: 1,
+    backgroundColor: 'transparent',
   },
   image: {
     width: '100%',
-    height: '100%',
+    height: 150,
+    resizeMode: 'cover',
   },
-  gradient: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: '50%',
-    paddingHorizontal: 15,
-    paddingBottom: 15,
-    justifyContent: 'flex-end',
+  content: {
+    padding: 12,
   },
   name: {
-    fontFamily: 'AmiriBold',
     fontSize: 18,
-    color: '#FFFFFF',
-    marginBottom: 5,
+    fontFamily: 'AmiriBold',
+    marginBottom: 6,
+    textAlign: 'right',
   },
   description: {
-    fontFamily: 'Amiri',
     fontSize: 14,
-    color: 'rgba(255,255,255,0.9)',
-  },
+    lineHeight: 20,
+    fontFamily: 'Amiri',
+    textAlign: 'right',
+  }
 });

@@ -1,23 +1,14 @@
-
 import React, { useState } from 'react';
 import { StyleSheet, TouchableOpacity, View, Text } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import Colors from '@/constants/Colors';
-
-type HadithCardProps = {
-  hadith: string;
-  source: string;
-  explanation?: string;
-};
-
-export default function HadithCard({ hadith, source, explanation }: HadithCardProps) {
-  const [expanded, setExpanded] = useState(false);
-  const colorScheme = useColorScheme();
-  
-  const toggleExpand = () => {
-    setExpanded(prev => !prev);
-  };
+import Animated, { 
+  useSharedValue, 
+  useAnimatedStyle, 
+  withTiming 
+} from 'react-native-reanimated';
+import { useThemeColor } from '@/hooks/useThemeColor';
 
 interface HadithCardProps {
   hadith: string;
@@ -29,7 +20,8 @@ export function HadithCard({ hadith, source, explanation }: HadithCardProps) {
   const [expanded, setExpanded] = useState(false);
   const rotateValue = useSharedValue(0);
   const heightValue = useSharedValue(0);
-  
+  const colorScheme = useColorScheme();
+
   const tintColor = useThemeColor({}, 'tint');
   const borderColor = useThemeColor({}, 'border');
 
@@ -69,13 +61,13 @@ export function HadithCard({ hadith, source, explanation }: HadithCardProps) {
           {hadith}
         </Text>
       </View>
-      
+
       <View style={styles.sourceContainer}>
         <Text style={[styles.source, { color: Colors[colorScheme].textSecondary }]}>
           {source}
         </Text>
       </View>
-      
+
       {explanation && (
         <>
           <TouchableOpacity 
@@ -93,7 +85,7 @@ export function HadithCard({ hadith, source, explanation }: HadithCardProps) {
               style={styles.expandIcon}
             />
           </TouchableOpacity>
-          
+
           {expanded && (
             <View style={styles.explanationContainer}>
               <Text style={[styles.explanation, { color: Colors[colorScheme].text }]}>
@@ -155,58 +147,5 @@ const styles = StyleSheet.create({
     fontFamily: 'Amiri',
     fontSize: 14,
     lineHeight: 22,
-  },
-});
-    </ThemedView>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    borderRadius: 12,
-    marginVertical: 8,
-    padding: 16,
-    borderWidth: 1,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.08,
-    shadowRadius: 2,
-  },
-  header: {
-    marginBottom: 12,
-  },
-  hadithText: {
-    fontFamily: 'Amiri',
-    fontSize: 18,
-    lineHeight: 28,
-    textAlign: 'right',
-  },
-  sourceContainer: {
-    marginBottom: 12,
-    paddingBottom: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: 'rgba(0,0,0,0.1)',
-  },
-  source: {
-    fontFamily: 'Amiri',
-    fontSize: 14,
-    textAlign: 'left',
-    opacity: 0.7,
-    fontStyle: 'italic',
-  },
-  expandButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
-    paddingVertical: 8,
-  },
-  explanation: {
-    fontFamily: 'Amiri',
-    fontSize: 16,
-    lineHeight: 24,
-    textAlign: 'right',
-    paddingTop: 8,
   },
 });

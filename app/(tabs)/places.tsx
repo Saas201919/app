@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { StyleSheet, ScrollView, View, FlatList, Text } from 'react-native';
 import { ThemedView } from '@/components/ThemedView';
@@ -6,65 +7,71 @@ import { Header } from '@/components/Header';
 import { Sidebar } from '@/components/Sidebar';
 import { PlaceCard } from '@/components/PlaceCard';
 
-const placesData = [
-  {
-    id: 'mecca',
-    name: 'مكة المكرمة',
-    image: require('@/assets/images/mecca.png'),
-    description: 'مسقط رأس النبي محمد ومكان نزول الوحي، وفيها الكعبة المشرفة أول بيت وضع للناس',
-    route: '/places/mecca',
-  },
-  {
-    id: 'medina',
-    name: 'المدينة المنورة',
-    image: require('@/assets/images/medina.png'),
-    description: 'المدينة التي هاجر إليها النبي وفيها المسجد النبوي الشريف وقبر النبي',
-    route: '/places/medina',
-  },
-  {
-    id: 'cave',
-    name: 'غار حراء',
-    image: require('@/assets/images/cave.png'),
-    description: 'الغار الذي كان النبي يتعبد فيه وفيه نزل الوحي عليه لأول مرة',
-    route: '/places/cave',
-  },
-  {
-    id: 'jerusalem',
-    name: 'المسجد الأقصى',
-    image: require('@/assets/images/jerusalem.png'),
-    description: 'المسجد الذي أسري بالنبي إليه ومنه عرج به إلى السماء',
-    route: '/places/jerusalem',
-  },
-  {
-    id: 'taif',
-    name: 'الطائف',
-    image: require('@/assets/images/taif.png'),
-    description: 'المدينة التي ذهب إليها النبي ليدعو أهلها للإسلام بعد وفاة عمه أبي طالب',
-    route: '/places/taif',
-  },
-];
-
 export default function PlacesScreen() {
+  const places = [
+    {
+      id: '1',
+      name: 'مكة المكرمة',
+      image: require('@/assets/images/mecca.png'),
+      description: 'مسقط رأس النبي محمد صلى الله عليه وسلم ومهد الإسلام، وفيها الكعبة المشرفة والمسجد الحرام.',
+      route: '/places/mecca'
+    },
+    {
+      id: '2',
+      name: 'المدينة المنورة',
+      image: require('@/assets/images/medina.png'),
+      description: 'المدينة التي هاجر إليها النبي محمد صلى الله عليه وسلم، وفيها المسجد النبوي وقبره الشريف.',
+      route: '/places/medina'
+    },
+    {
+      id: '3',
+      name: 'غار حراء',
+      image: require('@/assets/images/cave.png'),
+      description: 'الغار الذي كان يتعبد فيه النبي محمد صلى الله عليه وسلم، وفيه نزل الوحي لأول مرة.',
+      route: '/places/hira'
+    },
+    {
+      id: '4',
+      name: 'الطائف',
+      image: require('@/assets/images/taif.png'),
+      description: 'المدينة التي ذهب إليها النبي صلى الله عليه وسلم للدعوة إلى الإسلام بعد وفاة عمه أبي طالب.',
+      route: '/places/taif'
+    },
+    {
+      id: '5',
+      name: 'القدس',
+      image: require('@/assets/images/jerusalem.png'),
+      description: 'المدينة التي أسري إليها النبي محمد صلى الله عليه وسلم، وفيها المسجد الأقصى المبارك.',
+      route: '/places/jerusalem'
+    }
+  ];
+
   return (
     <ThemedView style={styles.container}>
-      <Header title="أماكن مقدسة" />
+      <Header title="أماكن من السيرة" />
       <Sidebar />
-
-      <ScrollView style={styles.scrollView} contentContainerStyle={styles.content}>
+      
+      <ScrollView 
+        style={styles.scrollView}
+        contentContainerStyle={styles.content}
+        showsVerticalScrollIndicator={false}
+      >
         <View style={styles.intro}>
-          <ThemedText style={styles.introText}>
-            الأماكن المقدسة والتاريخية المرتبطة بسيرة النبي محمد صلى الله عليه وسلم
+          <ThemedText type="title" style={styles.title}>
+            أماكن مقدسة وتاريخية
+          </ThemedText>
+          <ThemedText type="subtitle" style={styles.subtitle}>
+            تعرف على الأماكن التي ارتبطت بحياة النبي محمد صلى الله عليه وسلم
           </ThemedText>
         </View>
 
-        <ThemedText type="subtitle" style={styles.sectionTitle}>
-          معالم إسلامية
-        </ThemedText>
-
-        <View style={styles.carouselContainer}>
+        <View style={styles.placesSection}>
+          <ThemedText type="subtitle" style={styles.sectionTitle}>
+            الأماكن الرئيسية
+          </ThemedText>
           <FlatList
-            data={placesData}
-            renderItem={({item}) => (
+            data={places}
+            renderItem={({ item }) => (
               <PlaceCard
                 id={item.id}
                 name={item.name}
@@ -108,38 +115,41 @@ const styles = StyleSheet.create({
   },
   intro: {
     padding: 16,
-    marginBottom: 16,
   },
-  introText: {
-    fontFamily: 'Amiri',
+  title: {
+    fontSize: 24,
+    marginBottom: 8,
+    textAlign: 'right',
+  },
+  subtitle: {
     fontSize: 16,
-    lineHeight: 24,
-    textAlign: 'center',
+    opacity: 0.8,
+    marginBottom: 24,
+    textAlign: 'right',
+  },
+  placesSection: {
+    marginBottom: 24,
   },
   sectionTitle: {
-    fontFamily: 'AmiriBold',
+    fontSize: 18,
+    marginBottom: 12,
+    paddingHorizontal: 16,
     textAlign: 'right',
-    marginHorizontal: 16,
-    marginBottom: 16,
-  },
-  carouselContainer: {
-    marginBottom: 24,
   },
   carousel: {
     paddingLeft: 16,
     paddingRight: 8,
   },
   importanceSection: {
-    paddingHorizontal: 16,
+    padding: 16,
   },
   importanceCard: {
     padding: 16,
     borderRadius: 12,
+    backgroundColor: 'rgba(200, 200, 200, 0.1)',
   },
   importanceText: {
-    fontFamily: 'Amiri',
-    fontSize: 16,
     lineHeight: 24,
     textAlign: 'right',
-  },
+  }
 });
