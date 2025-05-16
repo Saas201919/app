@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, Image, TouchableOpacity, ImageSourcePropType } 
 import { Link } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useColorScheme } from '@/hooks/useColorScheme';
-import Colors from '@/constants/Colors';
+import { Colors } from '@/constants/Colors';
 
 type BiographyCardProps = {
   id: string;

@@ -3,7 +3,7 @@ import React from 'react';
 import { StyleSheet, TouchableOpacity, Text, View, Image, Dimensions } from 'react-native';
 import { Link } from 'expo-router';
 import { useColorScheme } from '@/hooks/useColorScheme';
-import Colors from '@/constants/Colors';
+import { Colors } from '@/constants/Colors';
 
 const { width } = Dimensions.get('window');
 

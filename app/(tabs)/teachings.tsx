@@ -5,7 +5,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { Header } from '@/components/Header';
 import { Sidebar } from '@/components/Sidebar';
 import { HadithCard } from '@/components/HadithCard';
-import Colors from '@/constants/Colors';
+import { Colors } from '@/constants/Colors';
 import useColorScheme from '@/hooks/useColorScheme';
 
 const hadithData = [
