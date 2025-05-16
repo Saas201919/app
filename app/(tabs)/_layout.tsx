@@ -12,6 +12,9 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         tabBarStyle: {
+          elevation: 0,
+          shadowOpacity: 0,
+          borderTopWidth: 0,
           backgroundColor: 'transparent',
         },
         tabBarBackground: () => <TabBarBackground />,
