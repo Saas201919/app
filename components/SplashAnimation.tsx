@@ -1,93 +1,100 @@
 
 import React, { useEffect } from 'react';
-import { View, StyleSheet, Dimensions } from 'react-native';
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withTiming,
-  Easing,
-  withSequence,
-  withDelay,
-} from 'react-native-reanimated';
-import { ThemedText } from './ThemedText';
-import { useThemeColor } from '@/hooks/useThemeColor';
+import { StyleSheet, Text, View, Image, Animated } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import { useColorScheme } from '@/hooks/useColorScheme';
 
-const { width, height } = Dimensions.get('window');
+export default function SplashAnimation() {
+  const colorScheme = useColorScheme();
+  const fadeAnim = React.useRef(new Animated.Value(0)).current;
+  const scaleAnim = React.useRef(new Animated.Value(0.8)).current;
 
-export function SplashAnimation() {
-  const opacity = useSharedValue(0);
-  const scale = useSharedValue(0.5);
-  const translateY = useSharedValue(20);
-  
-  const tintColor = useThemeColor({}, 'tint');
-  
   useEffect(() => {
-    opacity.value = withSequence(
-      withTiming(1, { duration: 800, easing: Easing.out(Easing.cubic) }),
-      withDelay(1500, withTiming(0, { duration: 500 }))
-    );
-    
-    scale.value = withSequence(
-      withTiming(1.1, { duration: 800, easing: Easing.out(Easing.cubic) }),
-      withTiming(1, { duration: 200 }),
-      withDelay(1300, withTiming(0.8, { duration: 500 }))
-    );
-    
-    translateY.value = withSequence(
-      withTiming(0, { duration: 800, easing: Easing.out(Easing.cubic) }),
-      withDelay(1500, withTiming(-20, { duration: 500 }))
-    );
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 1000,
+        useNativeDriver: true,
+      }),
+      Animated.spring(scaleAnim, {
+        toValue: 1,
+        friction: 8,
+        tension: 40,
+        useNativeDriver: true,
+      }),
+    ]).start();
   }, []);
 
-  const animatedStyle = useAnimatedStyle(() => {
-    return {
-      opacity: opacity.value,
-      transform: [
-        { scale: scale.value },
-        { translateY: translateY.value }
-      ],
-    };
-  });
-
   return (
-    <View style={styles.container}>
-      <Animated.View style={[styles.content, animatedStyle]}>
-        <ThemedText 
-          style={[styles.title, {color: tintColor}]} 
-          lightColor={tintColor} 
-          darkColor={tintColor}
+    <LinearGradient
+      colors={
+        colorScheme === 'dark'
+          ? ['#1A1A1A', '#121212']
+          : ['#FFFFFF', '#F5F5F5']
+      }
+      style={styles.container}
+    >
+      <Animated.View
+        style={[
+          styles.content,
+          {
+            opacity: fadeAnim,
+            transform: [{ scale: scaleAnim }],
+          },
+        ]}
+      >
+        <Image
+          source={require('@/assets/images/splash-icon.png')}
+          style={styles.logo}
+          resizeMode="contain"
+        />
+        <Text
+          style={[
+            styles.title,
+            { color: colorScheme === 'dark' ? '#FFFFFF' : '#000000' },
+          ]}
         >
           سيرة الرسول
-        </ThemedText>
-        <ThemedText style={styles.subtitle}>
+        </Text>
+        <Text
+          style={[
+            styles.subtitle,
+            {
+              color:
+                colorScheme === 'dark'
+                  ? 'rgba(255,255,255,0.7)'
+                  : 'rgba(0,0,0,0.7)',
+            },
+          ]}
+        >
           محمد صلى الله عليه وسلم
-        </ThemedText>
+        </Text>
       </Animated.View>
-    </View>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    position: 'absolute',
-    width: width,
-    height: height,
-    justifyContent: 'center',
+    flex: 1,
     alignItems: 'center',
-    zIndex: 1000,
+    justifyContent: 'center',
   },
   content: {
     alignItems: 'center',
   },
+  logo: {
+    width: 120,
+    height: 120,
+    marginBottom: 20,
+  },
   title: {
     fontFamily: 'AmiriBold',
-    fontSize: 42,
-    textAlign: 'center',
+    fontSize: 32,
+    marginBottom: 10,
   },
   subtitle: {
     fontFamily: 'Amiri',
-    fontSize: 24,
-    marginTop: 16,
-    textAlign: 'center',
+    fontSize: 18,
   },
 });

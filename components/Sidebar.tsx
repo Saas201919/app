@@ -1,142 +1,79 @@
-
-import React, { useEffect } from 'react';
-import { StyleSheet, View, TouchableOpacity, Dimensions, Linking, Platform } from 'react-native';
-import { ThemedView } from './ThemedView';
-import { ThemedText } from './ThemedText';
-import { Feather } from '@expo/vector-icons';
-import { useThemeColor } from '@/hooks/useThemeColor';
+import React from 'react';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native';
+import { Link } from 'expo-router';
 import { useSidebar } from '@/contexts/SidebarContext';
-import { router } from 'expo-router';
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-  Easing,
-} from 'react-native-reanimated';
+import { Feather } from '@expo/vector-icons';
+import { useColorScheme } from '@/hooks/useColorScheme';
+import Colors from '@/constants/Colors';
+import { LinearGradient } from 'expo-linear-gradient';
 
-const { width, height } = Dimensions.get('window');
+export default function Sidebar() {
+  const { sidebarVisible, closeSidebar } = useSidebar();
+  const colorScheme = useColorScheme();
 
-export function Sidebar() {
-  const { isOpen, close } = useSidebar();
-  const translateX = useSharedValue(-width);
-  const opacity = useSharedValue(0);
-  
-  const iconColor = useThemeColor({}, 'icon');
-  const tintColor = useThemeColor({}, 'tint');
-  
-  useEffect(() => {
-    if (isOpen) {
-      translateX.value = withTiming(0, {
-        duration: 300,
-        easing: Easing.out(Easing.cubic),
-      });
-      opacity.value = withTiming(1, { duration: 300 });
-    } else {
-      translateX.value = withTiming(-width, {
-        duration: 300,
-        easing: Easing.out(Easing.cubic),
-      });
-      opacity.value = withTiming(0, { duration: 300 });
-    }
-  }, [isOpen]);
+  if (!sidebarVisible) {
+    return null;
+  }
 
-  const sidebarStyle = useAnimatedStyle(() => {
-    return {
-      transform: [{ translateX: translateX.value }],
-    };
-  });
-
-  const overlayStyle = useAnimatedStyle(() => {
-    return {
-      opacity: opacity.value,
-      display: opacity.value === 0 ? 'none' : 'flex',
-    };
-  });
-
-  const navigateTo = (path: string) => {
-    router.push(path);
-    close();
-  };
+  const menuItems = [
+    { title: 'الرئيسية', icon: 'home', route: '/' },
+    { title: 'السيرة النبوية', icon: 'book-open', route: '/biography' },
+    { title: 'الأحاديث النبوية', icon: 'feather', route: '/teachings' },
+    { title: 'الأماكن المقدسة', icon: 'map-pin', route: '/places' },
+    { title: 'حول التطبيق', icon: 'info', route: '/about' },
+  ];
 
   return (
-    <>
-      <Animated.View 
-        style={[styles.overlay, overlayStyle]}
-        pointerEvents={isOpen ? 'auto' : 'none'}
+    <View style={styles.overlay}>
+      <TouchableOpacity style={styles.overlayBg} onPress={closeSidebar} />
+      <LinearGradient
+        colors={
+          colorScheme === 'dark'
+            ? ['#1A1A1A', '#121212']
+            : ['#FFFFFF', '#F5F5F5']
+        }
+        style={styles.sidebar}
       >
-        <TouchableOpacity 
-          style={{ width: '100%', height: '100%' }}
-          onPress={close}
-          activeOpacity={1}
-        />
-      </Animated.View>
-      
-      <Animated.View style={[styles.sidebar, sidebarStyle]}>
-        <ThemedView style={styles.container} lightColor="#fff" darkColor="#242728">
-          <View style={styles.header}>
-            <TouchableOpacity onPress={close} style={styles.closeButton}>
-              <Feather name="x" size={24} color={iconColor} />
-            </TouchableOpacity>
-          </View>
-          
-          <View style={styles.content}>
-            <SidebarItem 
-              icon="home" 
-              label="الرئيسية"
-              onPress={() => navigateTo('/')}
-            />
-            <SidebarItem 
-              icon="book-open" 
-              label="السيرة"
-              onPress={() => navigateTo('/biography')}
-            />
-            <SidebarItem 
-              icon="feather" 
-              label="الأحاديث"
-              onPress={() => navigateTo('/teachings')}
-            />
-            <SidebarItem 
-              icon="map-pin" 
-              label="أماكن"
-              onPress={() => navigateTo('/places')}
-            />
-            <SidebarItem 
-              icon="info" 
-              label="حول التطبيق"
-              onPress={() => navigateTo('/about')}
-            />
-          </View>
-          
-          <View style={styles.footer}>
-            <ThemedText style={styles.copyright}>
-              صنع من طرف شايبي وائل
-            </ThemedText>
-            <ThemedText style={styles.version}>
-              © 2025 سيرة الرسول
-            </ThemedText>
-          </View>
-        </ThemedView>
-      </Animated.View>
-    </>
-  );
-}
-
-interface SidebarItemProps {
-  icon: any;
-  label: string;
-  onPress: () => void;
-}
-
-function SidebarItem({ icon, label, onPress }: SidebarItemProps) {
-  const tintColor = useThemeColor({}, 'tint');
-  
-  return (
-    <TouchableOpacity style={styles.item} onPress={onPress} activeOpacity={0.7}>
-      <Feather name={icon} size={20} color={tintColor} />
-      <ThemedText style={styles.itemLabel}>
-        {label}
-      </ThemedText>
-    </TouchableOpacity>
+        <View style={styles.header}>
+          <Text style={[styles.title, { color: Colors[colorScheme].text }]}>
+            سيرة الرسول
+          </Text>
+          <TouchableOpacity onPress={closeSidebar} style={styles.closeButton}>
+            <Feather name="x" size={24} color={Colors[colorScheme].text} />
+          </TouchableOpacity>
+        </View>
+        <ScrollView style={styles.menuItems}>
+          {menuItems.map((item, index) => (
+            <Link
+              key={index}
+              href={item.route}
+              asChild
+              onPress={() => closeSidebar()}
+            >
+              <TouchableOpacity style={styles.menuItem}>
+                <Feather
+                  name={item.icon as any}
+                  size={20}
+                  color={Colors[colorScheme].text}
+                  style={styles.menuIcon}
+                />
+                <Text style={[styles.menuText, { color: Colors[colorScheme].text }]}>
+                  {item.title}
+                </Text>
+              </TouchableOpacity>
+            </Link>
+          ))}
+        </ScrollView>
+        <View style={styles.footer}>
+          <Text style={[styles.footerText, { color: Colors[colorScheme].text }]}>
+            صنع من طرف شايبي وائل
+          </Text>
+          <Text style={[styles.footerText, { color: Colors[colorScheme].textSecondary }]}>
+            الإصدار 1.0 © 2025
+          </Text>
+        </View>
+      </LinearGradient>
+    </View>
   );
 }
 
@@ -147,61 +84,59 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    zIndex: 100,
+    zIndex: 1000,
+    flexDirection: 'row',
+  },
+  overlayBg: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   sidebar: {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    width: '80%',
-    maxWidth: 300,
-    zIndex: 101,
-  },
-  container: {
-    flex: 1,
-    paddingTop: Platform.OS === 'ios' ? 50 : 20,
+    width: 280,
+    backgroundColor: '#FFF',
+    paddingTop: 50,
+    paddingHorizontal: 20,
+    height: '100%',
   },
   header: {
     flexDirection: 'row',
-    justifyContent: 'flex-end',
-    paddingHorizontal: 16,
-    paddingBottom: 16,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 30,
+  },
+  title: {
+    fontFamily: 'AmiriBold',
+    fontSize: 22,
   },
   closeButton: {
-    padding: 8,
+    padding: 5,
   },
-  content: {
+  menuItems: {
     flex: 1,
-    paddingHorizontal: 16,
   },
-  item: {
+  menuItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 16,
+    paddingVertical: 15,
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: 'rgba(0,0,0,0.1)',
   },
-  itemLabel: {
-    marginLeft: 16,
+  menuIcon: {
+    marginRight: 15,
+  },
+  menuText: {
     fontFamily: 'Amiri',
     fontSize: 18,
   },
   footer: {
-    padding: 16,
+    padding: 20,
     borderTopWidth: StyleSheet.hairlineWidth,
     borderTopColor: 'rgba(0,0,0,0.1)',
   },
-  copyright: {
-    textAlign: 'center',
+  footerText: {
     fontFamily: 'Amiri',
     fontSize: 14,
-    marginBottom: 4,
-  },
-  version: {
     textAlign: 'center',
-    fontFamily: 'Amiri',
-    fontSize: 12,
-    opacity: 0.7,
+    marginBottom: 5,
   },
 });

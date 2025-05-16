@@ -1,107 +1,69 @@
-
 import React from 'react';
-import { StyleSheet, ScrollView, View, Linking, TouchableOpacity } from 'react-native';
-import { ThemedView } from '@/components/ThemedView';
-import { ThemedText } from '@/components/ThemedText';
-import { Header } from '@/components/Header';
-import { Sidebar } from '@/components/Sidebar';
-import { Feather } from '@expo/vector-icons';
-import { useThemeColor } from '@/hooks/useThemeColor';
-import { LinearGradient } from 'expo-linear-gradient';
+import { StyleSheet, Text, View, ScrollView, Image } from 'react-native';
+import { Stack } from 'expo-router';
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { Colors } from '@/constants/Colors';
-import { router } from 'expo-router';
+import Colors from '@/constants/Colors';
+import Header from '@/components/Header';
+import { LinearGradient } from 'expo-linear-gradient';
 
 export default function AboutScreen() {
-  const iconColor = useThemeColor({}, 'icon');
   const colorScheme = useColorScheme();
-  
+
   return (
-    <ThemedView style={styles.container}>
-      <Header 
-        title="حول التطبيق"
-        rightIcon={<Feather name="x" size={24} color={iconColor} />}
-        onRightIconPress={() => router.back()}
-      />
-      <Sidebar />
-      
-      <ScrollView style={styles.scrollView} contentContainerStyle={styles.content}>
+    <View style={[styles.container, { backgroundColor: Colors[colorScheme].background }]}>
+      <Stack.Screen options={{ headerShown: false }} />
+      <Header title="حول التطبيق" />
+      <ScrollView contentContainerStyle={styles.scrollView}>
         <LinearGradient
-          colors={Colors[colorScheme].gradient}
-          style={styles.logoContainer}
+          colors={
+            colorScheme === 'dark'
+              ? ['#2C3E50', '#1A1A1A']
+              : ['#4A7856', '#2E5E40']
+          }
+          style={styles.header}
         >
-          <ThemedText style={styles.logoText} lightColor="#fff" darkColor="#fff">
-            سيرة الرسول
-          </ThemedText>
-          <ThemedText style={styles.logoSubtitle} lightColor="#fff" darkColor="#fff">
-            v1.0.0
-          </ThemedText>
+          <Image
+            source={require('@/assets/images/app-icon.png')}
+            style={styles.appIcon}
+            resizeMode="contain"
+          />
+          <Text style={styles.appName}>سيرة الرسول</Text>
+          <Text style={styles.appVersion}>الإصدار 1.0</Text>
         </LinearGradient>
-        
-        <View style={styles.section}>
-          <ThemedText type="subtitle" style={styles.sectionTitle}>
+
+        <View style={styles.content}>
+          <Text style={[styles.sectionTitle, { color: Colors[colorScheme].text }]}>
             عن التطبيق
-          </ThemedText>
-          <ThemedText style={styles.aboutText}>
-            تطبيق "سيرة الرسول" هو مصدر شامل للتعرف على حياة النبي محمد صلى الله عليه وسلم. يهدف التطبيق إلى تقديم معلومات موثوقة وصحيحة عن سيرة النبي، وتعاليمه، والأماكن المرتبطة بحياته.
-          </ThemedText>
-          <ThemedText style={styles.aboutText}>
-            جميع المعلومات المقدمة في هذا التطبيق مستمدة من مصادر إسلامية موثوقة، وتم التحقق منها للتأكد من صحتها.
-          </ThemedText>
-        </View>
-        
-        <View style={styles.section}>
-          <ThemedText type="subtitle" style={styles.sectionTitle}>
+          </Text>
+          <Text style={[styles.paragraph, { color: Colors[colorScheme].text }]}>
+            هذا التطبيق مخصص لتقديم سيرة النبي محمد صلى الله عليه وسلم بأسلوب سهل وميسر، ويهدف إلى نشر السيرة النبوية العطرة بين الناس، خاصة فئة الشباب.
+          </Text>
+          <Text style={[styles.paragraph, { color: Colors[colorScheme].text }]}>
+            يحتوي التطبيق على معلومات موثوقة من مصادر معتمدة في السيرة النبوية، كما يتميز بواجهة سهلة الاستخدام وتصميم أنيق.
+          </Text>
+
+          <Text style={[styles.sectionTitle, { color: Colors[colorScheme].text }]}>
             المطور
-          </ThemedText>
-          <ThemedView style={styles.developerCard}>
-            <ThemedText type="defaultSemiBold" style={styles.developerName}>
-              شايبي وائل
-            </ThemedText>
-            <ThemedText style={styles.developerInfo}>
-              مطور تطبيقات ومصمم واجهات مستخدم
-            </ThemedText>
-            <ThemedText style={styles.developmentYear}>
-              طُوِّر هذا التطبيق في سنة 2025
-            </ThemedText>
-          </ThemedView>
-        </View>
-        
-        <View style={styles.section}>
-          <ThemedText type="subtitle" style={styles.sectionTitle}>
-            المصادر
-          </ThemedText>
-          <ThemedView style={styles.sourcesCard}>
-            <SourceItem title="صحيح البخاري" />
-            <SourceItem title="صحيح مسلم" />
-            <SourceItem title="سنن الترمذي" />
-            <SourceItem title="سنن أبي داود" />
-            <SourceItem title="السيرة النبوية لابن هشام" />
-            <SourceItem title="الرحيق المختوم" />
-          </ThemedView>
-        </View>
-        
-        <View style={styles.footer}>
-          <ThemedText style={styles.footerText}>
+          </Text>
+          <Text style={[styles.paragraph, { color: Colors[colorScheme].text }]}>
+            تم تطوير هذا التطبيق من قبل شايبي وائل في عام 2025، بهدف نشر السيرة النبوية وتعريف الناس بحياة النبي محمد صلى الله عليه وسلم.
+          </Text>
+
+          <Text style={[styles.sectionTitle, { color: Colors[colorScheme].text }]}>
+            شكر خاص
+          </Text>
+          <Text style={[styles.paragraph, { color: Colors[colorScheme].text }]}>
+            نتقدم بالشكر لكل من ساهم في هذا العمل، ونشكر جميع المستخدمين على دعمهم المستمر.
+          </Text>
+          <Text style={[styles.paragraph, { color: Colors[colorScheme].text }]}>
+            نرجو أن يكون هذا التطبيق مفيدًا لكم، وأن يساهم في نشر سيرة النبي محمد صلى الله عليه وسلم في مختلف أنحاء العالم.
+          </Text>
+
+          <Text style={[styles.footer, { color: Colors[colorScheme].textSecondary }]}>
             جميع الحقوق محفوظة © 2025
-          </ThemedText>
+          </Text>
         </View>
       </ScrollView>
-    </ThemedView>
-  );
-}
-
-interface SourceItemProps {
-  title: string;
-}
-
-function SourceItem({ title }: SourceItemProps) {
-  const borderColor = useThemeColor({}, 'border');
-  return (
-    <View style={[styles.sourceItem, { borderBottomColor: borderColor }]}>
-      <ThemedText style={styles.sourceTitle}>
-        {title}
-      </ThemedText>
     </View>
   );
 }
@@ -111,84 +73,48 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollView: {
-    flex: 1,
+    paddingBottom: 30,
   },
-  content: {
-    paddingBottom: 32,
-  },
-  logoContainer: {
-    padding: 32,
+  header: {
+    padding: 30,
     alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 24,
   },
-  logoText: {
+  appIcon: {
+    width: 100,
+    height: 100,
+    marginBottom: 15,
+  },
+  appName: {
     fontFamily: 'AmiriBold',
-    fontSize: 32,
-    marginBottom: 8,
+    fontSize: 24,
+    color: '#FFF',
+    marginBottom: 5,
   },
-  logoSubtitle: {
+  appVersion: {
     fontFamily: 'Amiri',
     fontSize: 16,
-    opacity: 0.8,
+    color: 'rgba(255,255,255,0.8)',
   },
-  section: {
-    paddingHorizontal: 16,
-    marginBottom: 24,
+  content: {
+    padding: 20,
   },
   sectionTitle: {
     fontFamily: 'AmiriBold',
-    textAlign: 'right',
-    marginBottom: 16,
+    fontSize: 20,
+    marginTop: 20,
+    marginBottom: 10,
   },
-  aboutText: {
+  paragraph: {
     fontFamily: 'Amiri',
     fontSize: 16,
-    lineHeight: 24,
-    textAlign: 'right',
-    marginBottom: 12,
-  },
-  developerCard: {
-    padding: 16,
-    borderRadius: 12,
-  },
-  developerName: {
-    fontFamily: 'AmiriBold',
-    fontSize: 18,
-    textAlign: 'center',
-    marginBottom: 8,
-  },
-  developerInfo: {
-    fontFamily: 'Amiri',
-    fontSize: 16,
-    textAlign: 'center',
-    marginBottom: 8,
-  },
-  developmentYear: {
-    fontFamily: 'Amiri',
-    fontSize: 14,
-    textAlign: 'center',
-    opacity: 0.7,
-  },
-  sourcesCard: {
-    borderRadius: 12,
-  },
-  sourceItem: {
-    paddingVertical: 12,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-  },
-  sourceTitle: {
-    fontFamily: 'Amiri',
-    fontSize: 16,
-    textAlign: 'right',
+    lineHeight: 26,
+    marginBottom: 10,
+    textAlign: 'justify',
   },
   footer: {
-    padding: 16,
-    alignItems: 'center',
-  },
-  footerText: {
     fontFamily: 'Amiri',
     fontSize: 14,
-    opacity: 0.7,
+    textAlign: 'center',
+    marginTop: 30,
   },
 });

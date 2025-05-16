@@ -1,140 +1,125 @@
 
-import React, { useEffect } from 'react';
-import { StyleSheet, ScrollView, View, TouchableOpacity } from 'react-native';
-import { Image } from 'expo-image';
-import { LinearGradient } from 'expo-linear-gradient';
+import React from 'react';
+import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Image } from 'react-native';
+import { Link } from 'expo-router';
+import Colors from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { Colors } from '@/constants/Colors';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import { Header } from '@/components/Header';
-import { Sidebar } from '@/components/Sidebar';
-import { SplashAnimation } from '@/components/SplashAnimation';
-import { BiographyCard } from '@/components/BiographyCard';
-import { HadithCard } from '@/components/HadithCard';
-import { useRouter } from 'expo-router';
+import Header from '@/components/Header';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Feather } from '@expo/vector-icons';
-import { useThemeColor } from '@/hooks/useThemeColor';
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withTiming,
-} from 'react-native-reanimated';
+import SplashAnimation from '@/components/SplashAnimation';
 
 export default function HomeScreen() {
-  const router = useRouter();
   const colorScheme = useColorScheme();
-  const showSplash = useSharedValue(true);
-  const iconColor = useThemeColor({}, 'icon');
-  
-  useEffect(() => {
+  const [showSplash, setShowSplash] = React.useState(true);
+
+  React.useEffect(() => {
     const timer = setTimeout(() => {
-      showSplash.value = withTiming(false, { duration: 500 });
-    }, 2000);
+      setShowSplash(false);
+    }, 2500);
     
     return () => clearTimeout(timer);
   }, []);
-  
-  const splashStyle = useAnimatedStyle(() => {
-    return {
-      opacity: showSplash.value ? 1 : 0,
-      display: showSplash.value ? 'flex' : 'none',
-    };
-  });
+
+  if (showSplash) {
+    return <SplashAnimation />;
+  }
+
+  const sections = [
+    {
+      id: 'biography',
+      title: 'السيرة النبوية',
+      description: 'تعرف على حياة النبي محمد صلى الله عليه وسلم',
+      icon: 'book-open',
+      route: '/biography',
+    },
+    {
+      id: 'teachings',
+      title: 'الأحاديث النبوية',
+      description: 'مجموعة مختارة من أحاديث النبي محمد صلى الله عليه وسلم',
+      icon: 'feather',
+      route: '/teachings',
+    },
+    {
+      id: 'places',
+      title: 'الأماكن المقدسة',
+      description: 'الأماكن التي ارتبطت بحياة النبي محمد صلى الله عليه وسلم',
+      icon: 'map-pin',
+      route: '/places',
+    },
+  ];
 
   return (
-    <ThemedView style={styles.container}>
-      <Animated.View style={[styles.splashContainer, splashStyle]}>
-        <SplashAnimation />
-      </Animated.View>
-      
+    <View style={[styles.container, { backgroundColor: Colors[colorScheme].background }]}>
       <Header title="سيرة الرسول" />
-      <Sidebar />
-      
-      <ScrollView style={styles.scrollView} contentContainerStyle={styles.content}>
-        <LinearGradient
-          colors={Colors[colorScheme].gradient}
-          style={styles.banner}
-        >
-          <ThemedText style={styles.welcomeText} lightColor="#fff" darkColor="#fff">
-            بسم الله الرحمن الرحيم
-          </ThemedText>
-          <ThemedText style={styles.quoteText} lightColor="#fff" darkColor="#fff">
-            "إنما بعثت لأتمم مكارم الأخلاق"
-          </ThemedText>
-        </LinearGradient>
-        
-        <View style={styles.section}>
-          <View style={styles.sectionHeader}>
-            <ThemedText type="subtitle" style={styles.sectionTitle}>
-              السيرة النبوية
-            </ThemedText>
-            <TouchableOpacity onPress={() => router.push('/biography')}>
-              <ThemedText style={{ color: Colors[colorScheme].tint }}>
-                عرض الكل
-              </ThemedText>
-            </TouchableOpacity>
-          </View>
-          
-          <BiographyCard 
-            id="birth"
-            title="مولد النبي"
-            description="ولد النبي محمد صلى الله عليه وسلم في مكة المكرمة عام الفيل"
-            image={require('@/assets/images/mecca.png')}
-            route="/biography/birth"
-          />
-          
-          <BiographyCard 
-            id="prophecy"
-            title="بعثة النبي"
-            description="نزول الوحي على النبي محمد في غار حراء"
-            image={require('@/assets/images/prophecy.png')}
-            route="/biography/prophecy"
-          />
-        </View>
-        
-        <View style={styles.section}>
-          <View style={styles.sectionHeader}>
-            <ThemedText type="subtitle" style={styles.sectionTitle}>
-              أحاديث نبوية
-            </ThemedText>
-            <TouchableOpacity onPress={() => router.push('/teachings')}>
-              <ThemedText style={{ color: Colors[colorScheme].tint }}>
-                عرض الكل
-              </ThemedText>
-            </TouchableOpacity>
-          </View>
-          
-          <HadithCard 
-            hadith="إنما الأعمال بالنيات وإنما لكل امرئ ما نوى، فمن كانت هجرته إلى الله ورسوله فهجرته إلى الله ورسوله، ومن كانت هجرته لدنيا يصيبها أو امرأة ينكحها فهجرته إلى ما هاجر إليه."
-            source="متفق عليه"
-            explanation="هذا الحديث يدل على أهمية النية في الأعمال، وأن الأعمال تقيم بحسب النية."
-          />
-        </View>
-        
-        <View style={styles.getStartedSection}>
-          <ThemedText type="subtitle" style={styles.getStartedTitle}>
-            تعرف على حياة النبي
-          </ThemedText>
-          <TouchableOpacity 
-            style={styles.getStartedButton}
-            onPress={() => router.push('/biography')}
+      <ScrollView contentContainerStyle={styles.scrollView}>
+        <View style={styles.heroContainer}>
+          <LinearGradient
+            colors={
+              colorScheme === 'dark'
+                ? ['#2C3E50', '#1A1A1A']
+                : ['#4A7856', '#2E5E40']
+            }
+            style={styles.heroGradient}
           >
-            <LinearGradient
-              colors={Colors[colorScheme].gradient}
-              style={styles.gradientButton}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
+            <Text style={styles.heroTitle}>بسم الله الرحمن الرحيم</Text>
+            <Text style={styles.heroSubtitle}>
+              سيرة النبي محمد صلى الله عليه وسلم
+            </Text>
+            <Text style={styles.heroText}>
+              "لَقَدْ كَانَ لَكُمْ فِي رَسُولِ اللَّهِ أُسْوَةٌ حَسَنَةٌ لِمَنْ كَانَ يَرْجُو اللَّهَ وَالْيَوْمَ الْآخِرَ وَذَكَرَ اللَّهَ كَثِيرًا"
+            </Text>
+          </LinearGradient>
+        </View>
+
+        <View style={styles.sectionsContainer}>
+          {sections.map((section) => (
+            <Link
+              key={section.id}
+              href={section.route as any}
+              asChild
             >
-              <ThemedText style={styles.buttonText} lightColor="#fff" darkColor="#fff">
-                ابدأ الرحلة
-              </ThemedText>
-              <Feather name="arrow-right" size={18} color="#fff" />
-            </LinearGradient>
-          </TouchableOpacity>
+              <TouchableOpacity>
+                <LinearGradient
+                  colors={
+                    colorScheme === 'dark'
+                      ? ['#2A2A2A', '#1A1A1A']
+                      : ['#FFFFFF', '#F5F5F5']
+                  }
+                  style={[
+                    styles.sectionCard,
+                    { 
+                      borderColor: colorScheme === 'dark' 
+                        ? 'rgba(255,255,255,0.1)' 
+                        : 'rgba(0,0,0,0.1)' 
+                    }
+                  ]}
+                >
+                  <View style={styles.sectionIconContainer}>
+                    <Feather name={section.icon as any} size={24} color={Colors[colorScheme].tint} />
+                  </View>
+                  <Text style={[styles.sectionTitle, { color: Colors[colorScheme].text }]}>
+                    {section.title}
+                  </Text>
+                  <Text style={[styles.sectionDescription, { color: Colors[colorScheme].textSecondary }]}>
+                    {section.description}
+                  </Text>
+                </LinearGradient>
+              </TouchableOpacity>
+            </Link>
+          ))}
+        </View>
+
+        <View style={styles.quoteContainer}>
+          <Text style={[styles.quoteText, { color: Colors[colorScheme].text }]}>
+            "إِنَّمَا بُعِثْتُ لِأُتَمِّمَ مَكَارِمَ الْأَخْلَاقِ"
+          </Text>
+          <Text style={[styles.quoteSource, { color: Colors[colorScheme].textSecondary }]}>
+            رواه البخاري
+          </Text>
         </View>
       </ScrollView>
-    </ThemedView>
+    </View>
   );
 }
 
@@ -142,78 +127,80 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  splashContainer: {
-    ...StyleSheet.absoluteFillObject,
-    zIndex: 1000,
-  },
   scrollView: {
-    flex: 1,
+    paddingBottom: 50,
   },
-  content: {
-    paddingBottom: 32,
+  heroContainer: {
+    marginHorizontal: 20,
+    marginTop: 20,
+    borderRadius: 15,
+    overflow: 'hidden',
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
   },
-  banner: {
-    padding: 20,
-    borderRadius: 0,
-    marginBottom: 16,
+  heroGradient: {
+    padding: 25,
     alignItems: 'center',
   },
-  welcomeText: {
+  heroTitle: {
     fontFamily: 'AmiriBold',
     fontSize: 24,
-    marginBottom: 8,
+    color: '#FFF',
+    marginBottom: 10,
     textAlign: 'center',
   },
-  quoteText: {
+  heroSubtitle: {
     fontFamily: 'Amiri',
     fontSize: 18,
+    color: 'rgba(255,255,255,0.9)',
+    marginBottom: 15,
     textAlign: 'center',
-    opacity: 0.9,
   },
-  section: {
-    paddingHorizontal: 16,
-    marginBottom: 24,
+  heroText: {
+    fontFamily: 'Amiri',
+    fontSize: 16,
+    color: 'rgba(255,255,255,0.85)',
+    textAlign: 'center',
+    lineHeight: 26,
   },
-  sectionHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 16,
+  sectionsContainer: {
+    padding: 20,
+  },
+  sectionCard: {
+    padding: 20,
+    borderRadius: 12,
+    marginBottom: 15,
+    borderWidth: 1,
+  },
+  sectionIconContainer: {
+    marginBottom: 15,
   },
   sectionTitle: {
     fontFamily: 'AmiriBold',
-    textAlign: 'right',
+    fontSize: 18,
+    marginBottom: 8,
   },
-  getStartedSection: {
-    paddingHorizontal: 16,
+  sectionDescription: {
+    fontFamily: 'Amiri',
+    fontSize: 14,
+    lineHeight: 20,
+  },
+  quoteContainer: {
+    margin: 20,
+    padding: 20,
     alignItems: 'center',
-    marginTop: 8,
   },
-  getStartedTitle: {
+  quoteText: {
+    fontFamily: 'AmiriBold',
+    fontSize: 18,
     textAlign: 'center',
-    marginBottom: 16,
-    fontFamily: 'AmiriBold',
+    marginBottom: 10,
   },
-  getStartedButton: {
-    width: '80%',
-    borderRadius: 12,
-    overflow: 'hidden',
-    elevation: 4,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-  },
-  gradientButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 14,
-    paddingHorizontal: 20,
-  },
-  buttonText: {
-    fontFamily: 'AmiriBold',
-    fontSize: 16,
-    marginRight: 8,
+  quoteSource: {
+    fontFamily: 'Amiri',
+    fontSize: 14,
   },
 });

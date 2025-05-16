@@ -1,70 +1,70 @@
 
 import React from 'react';
-import { StyleSheet, ScrollView, View, Image } from 'react-native';
-import { ThemedView } from '@/components/ThemedView';
-import { ThemedText } from '@/components/ThemedText';
-import { Header } from '@/components/Header';
-import { Sidebar } from '@/components/Sidebar';
-import { Feather } from '@expo/vector-icons';
-import { useThemeColor } from '@/hooks/useThemeColor';
-import { router } from 'expo-router';
+import { StyleSheet, Text, View, ScrollView, Image } from 'react-native';
+import { Stack } from 'expo-router';
+import { useColorScheme } from '@/hooks/useColorScheme';
+import Colors from '@/constants/Colors';
+import Header from '@/components/Header';
 
 export default function BirthScreen() {
-  const iconColor = useThemeColor({}, 'icon');
-  
+  const colorScheme = useColorScheme();
+
   return (
-    <ThemedView style={styles.container}>
-      <Header 
-        title="مولد النبي"
-        rightIcon={<Feather name="arrow-right" size={24} color={iconColor} />}
-        onRightIconPress={() => router.back()}
-        showMenu={false}
-      />
-      <Sidebar />
-      
-      <ScrollView style={styles.scrollView} contentContainerStyle={styles.content}>
-        <View style={styles.imageContainer}>
-          <Image 
-            source={require('@/assets/images/mecca.png')}
-            style={styles.image}
-            resizeMode="cover"
-          />
-        </View>
-        
-        <View style={styles.section}>
-          <ThemedText type="subtitle" style={styles.sectionTitle}>
-            ولادة النبي محمد صلى الله عليه وسلم
-          </ThemedText>
-          <ThemedText style={styles.paragraph}>
-            ولد النبي محمد صلى الله عليه وسلم في مكة المكرمة، في صباح يوم الاثنين، في شهر ربيع الأول من عام الفيل، الموافق لعام 570 أو 571 ميلادي. وسمي عام الفيل لأنه في ذلك العام حاول أبرهة الحبشي هدم الكعبة المشرفة، فأرسل الله عليه طيراً أبابيل ترميهم بحجارة من سجيل.
-          </ThemedText>
-          <ThemedText style={styles.paragraph}>
-            ولد النبي يتيم الأب، حيث توفي والده عبد الله بن عبد المطلب قبل ولادته بأشهر، وهو في طريق عودته من رحلة تجارية إلى بلاد الشام. وقد تولت أمه آمنة بنت وهب رعايته في بداية حياته، وأرضعته حليمة السعدية.
-          </ThemedText>
-        </View>
-        
-        <View style={styles.section}>
-          <ThemedText type="subtitle" style={styles.sectionTitle}>
+    <View style={[styles.container, { backgroundColor: Colors[colorScheme].background }]}>
+      <Stack.Screen options={{ headerShown: false }} />
+      <Header title="مولد النبي ﷺ" />
+      <ScrollView contentContainerStyle={styles.scrollView}>
+        <Image
+          source={require('@/assets/images/mecca.png')}
+          style={styles.heroImage}
+          resizeMode="cover"
+        />
+        <View style={styles.content}>
+          <Text style={[styles.title, { color: Colors[colorScheme].text }]}>
+            مولد النبي محمد ﷺ
+          </Text>
+          
+          <Text style={[styles.paragraph, { color: Colors[colorScheme].text }]}>
+            وُلد النبي محمد صلى الله عليه وسلم في مكة المكرمة في عام الفيل، الموافق لعام 570 أو 571 ميلادياً، في شهر ربيع الأول. كانت ولادته حدثاً مميزاً في تاريخ البشرية، حيث تزامنت مع أحداث عظيمة.
+          </Text>
+          
+          <Text style={[styles.subTitle, { color: Colors[colorScheme].text }]}>
             نسبه الشريف
-          </ThemedText>
-          <ThemedText style={styles.paragraph}>
-            هو محمد بن عبد الله بن عبد المطلب بن هاشم بن عبد مناف بن قصي بن كلاب بن مرة بن كعب بن لؤي بن غالب بن فهر بن مالك بن النضر بن كنانة بن خزيمة بن مدركة بن إلياس بن مضر بن نزار بن معد بن عدنان. وينتهي نسبه إلى سيدنا إسماعيل بن إبراهيم عليهما السلام.
-          </ThemedText>
-        </View>
-        
-        <View style={styles.section}>
-          <ThemedText type="subtitle" style={styles.sectionTitle}>
-            أحداث مهمة عند ولادته
-          </ThemedText>
-          <ThemedText style={styles.paragraph}>
-            رُوي أن ليلة مولده صلى الله عليه وسلم شهدت أحداثاً عجيبة، منها سقوط شرفات إيوان كسرى ملك الفرس، وخمود نار فارس التي كانت تعبد من دون الله، وغيض بحيرة ساوة. وهذه الأحداث كانت إشارات إلى ظهور نبي آخر الزمان الذي سيغير وجه الأرض.
-          </ThemedText>
-          <ThemedText style={styles.paragraph}>
-            كما رأت أمه آمنة في منامها عند حملها به أن نوراً خرج منها أضاءت له قصور بصرى من أرض الشام، وهذا إشارة إلى النور الذي سيخرج على يديه ويمتد إلى أنحاء الأرض.
-          </ThemedText>
+          </Text>
+          <Text style={[styles.paragraph, { color: Colors[colorScheme].text }]}>
+            هو محمد بن عبد الله بن عبد المطلب بن هاشم بن عبد مناف، من قبيلة قريش المكية المشهورة. وُلد يتيماً، فقد توفي والده عبد الله قبل ولادته، وكانت أمه آمنة بنت وهب.
+          </Text>
+          
+          <Text style={[styles.subTitle, { color: Colors[colorScheme].text }]}>
+            الرضاعة
+          </Text>
+          <Text style={[styles.paragraph, { color: Colors[colorScheme].text }]}>
+            أرضعته أمه أياماً ثم أرضعته ثويبة مولاة أبي لهب، ثم انتقل إلى البادية، حيث أرضعته حليمة السعدية من بني سعد بن بكر، وبقي عندها نحو أربع سنوات، وقد شهد خلالها حادثة شق الصدر الشهيرة.
+          </Text>
+          
+          <Text style={[styles.subTitle, { color: Colors[colorScheme].text }]}>
+            وفاة أمه
+          </Text>
+          <Text style={[styles.paragraph, { color: Colors[colorScheme].text }]}>
+            عاد إلى أمه آمنة بعد البادية، وعندما بلغ الـسادسة من عمره، توفيت أمه في الأبواء بين مكة والمدينة، وذلك بعد زيارتها لقبر زوجها عبد الله في المدينة المنورة.
+          </Text>
+          
+          <Text style={[styles.subTitle, { color: Colors[colorScheme].text }]}>
+            في كفالة جده
+          </Text>
+          <Text style={[styles.paragraph, { color: Colors[colorScheme].text }]}>
+            بعد وفاة أمه، تولى جده عبد المطلب كفالته ورعايته، وأظهر له حباً شديداً واهتماماً كبيراً. بقي النبي في كفالة جده لمدة سنتين، حتى توفي عبد المطلب وعمر النبي ثماني سنوات.
+          </Text>
+          
+          <Text style={[styles.subTitle, { color: Colors[colorScheme].text }]}>
+            في كفالة عمه
+          </Text>
+          <Text style={[styles.paragraph, { color: Colors[colorScheme].text }]}>
+            بعد وفاة جده، كفله عمه أبو طالب، وضمه إلى أولاده، وأحاطه بالعناية والرعاية، وظل يدافع عنه ويحميه بعد البعثة، رغم أنه لم يدخل في الإسلام، وبقي النبي معه حتى توفي أبو طالب والنبي في الخمسين من عمره.
+          </Text>
         </View>
       </ScrollView>
-    </ThemedView>
+    </View>
   );
 }
 
@@ -73,34 +73,32 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollView: {
-    flex: 1,
+    paddingBottom: 30,
   },
-  content: {
-    paddingBottom: 32,
-  },
-  imageContainer: {
+  heroImage: {
     width: '100%',
     height: 200,
-    marginBottom: 16,
   },
-  image: {
-    width: '100%',
-    height: '100%',
+  content: {
+    padding: 20,
   },
-  section: {
-    paddingHorizontal: 16,
-    marginBottom: 24,
-  },
-  sectionTitle: {
+  title: {
     fontFamily: 'AmiriBold',
-    textAlign: 'right',
-    marginBottom: 16,
+    fontSize: 24,
+    marginBottom: 15,
+    textAlign: 'center',
+  },
+  subTitle: {
+    fontFamily: 'AmiriBold',
+    fontSize: 18,
+    marginTop: 15,
+    marginBottom: 8,
   },
   paragraph: {
     fontFamily: 'Amiri',
     fontSize: 16,
     lineHeight: 26,
-    textAlign: 'right',
-    marginBottom: 12,
+    marginBottom: 10,
+    textAlign: 'justify',
   },
 });

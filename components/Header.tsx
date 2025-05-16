@@ -1,41 +1,33 @@
 
 import React from 'react';
-import { StyleSheet, View, TouchableOpacity } from 'react-native';
-import { ThemedText } from './ThemedText';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { Feather } from '@expo/vector-icons';
-import { useThemeColor } from '@/hooks/useThemeColor';
 import { useSidebar } from '@/contexts/SidebarContext';
+import Colors from '@/constants/Colors';
+import { useColorScheme } from '@/hooks/useColorScheme';
 
-interface HeaderProps {
-  title: string;
-  showMenu?: boolean;
-  rightIcon?: React.ReactNode;
-  onRightIconPress?: () => void;
-}
+type HeaderProps = {
+  title?: string;
+};
 
-export function Header({ title, showMenu = true, rightIcon, onRightIconPress }: HeaderProps) {
-  const iconColor = useThemeColor({}, 'icon');
-  const { toggle } = useSidebar();
-  
+export default function Header({ title }: HeaderProps) {
+  const { toggleSidebar } = useSidebar();
+  const colorScheme = useColorScheme();
+
   return (
-    <View style={styles.header}>
-      {showMenu && (
-        <TouchableOpacity onPress={toggle} style={styles.menuButton}>
-          <Feather name="menu" size={24} color={iconColor} />
-        </TouchableOpacity>
+    <View style={[
+      styles.header, 
+      { backgroundColor: Colors[colorScheme].background }
+    ]}>
+      <TouchableOpacity onPress={toggleSidebar} style={styles.menuButton}>
+        <Feather name="menu" size={24} color={Colors[colorScheme].text} />
+      </TouchableOpacity>
+      {title && (
+        <Text style={[styles.title, { color: Colors[colorScheme].text }]}>
+          {title}
+        </Text>
       )}
-      
-      <ThemedText type="subtitle" style={styles.title}>
-        {title}
-      </ThemedText>
-      
-      {rightIcon ? (
-        <TouchableOpacity onPress={onRightIconPress} style={styles.rightButton}>
-          {rightIcon}
-        </TouchableOpacity>
-      ) : (
-        <View style={styles.rightPlaceholder} />
-      )}
+      <View style={styles.iconPlaceholder} />
     </View>
   );
 }
@@ -43,23 +35,23 @@ export function Header({ title, showMenu = true, rightIcon, onRightIconPress }: 
 const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    alignItems: 'center',
+    paddingTop: 50,
+    paddingBottom: 10,
+    paddingHorizontal: 20,
   },
   menuButton: {
-    padding: 8,
-  },
-  rightButton: {
-    padding: 8,
-  },
-  rightPlaceholder: {
-    width: 40,
+    padding: 5,
   },
   title: {
     fontFamily: 'AmiriBold',
+    fontSize: 20,
     textAlign: 'center',
     flex: 1,
+  },
+  iconPlaceholder: {
+    width: 34,
+    height: 34,
   },
 });

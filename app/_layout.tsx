@@ -7,9 +7,8 @@ import { useEffect } from 'react';
 import 'react-native-reanimated';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { SidebarProvider } from '@/contexts/SidebarContext';
-import { Drawer } from 'expo-router/drawer';
 
-// Prevent the splash screen from auto-hiding
+// منع شاشة البداية من الإخفاء التلقائي
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
@@ -20,7 +19,7 @@ export default function RootLayout() {
     AmiriBold: require('../assets/fonts/Amiri-Bold.ttf'),
   });
 
-  // Expo Router uses Error Boundaries to catch errors in the navigation tree.
+  // استخدام حدود الخطأ لالتقاط الأخطاء في شجرة التنقل
   useEffect(() => {
     if (error) throw error;
   }, [error]);
@@ -40,8 +39,9 @@ export default function RootLayout() {
       <SidebarProvider>
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="(drawer)" options={{ headerShown: false }} />
           <Stack.Screen name="+not-found" options={{ title: 'صفحة غير موجودة' }} />
+          <Stack.Screen name="about" options={{ title: 'حول التطبيق' }} />
+          <Stack.Screen name="biography/birth" options={{ title: 'مولد النبي' }} />
         </Stack>
         <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
       </SidebarProvider>
