@@ -1,0 +1,19 @@
+<div class="luna-console-preview" data-id="38"><div class="luna-console-preview-container"><div class="luna-console-preview-icon-container"><span class="luna-console-icon luna-console-icon-caret-right"></span></div><span class="luna-console-preview-content-container"><span class="luna-console-descriptor">Error</span> <span class="luna-console-object-preview">{<span class="luna-console-key">componentStack</span>: <span class="luna-console-string">&quot;↵    at div (&lt;anonymous&gt;)↵    at View…&quot;</span>}</span></span></div><div class="luna-console-json luna-console-hidden"></div></div>
+
+The above error occurred in the <div> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, LogBoxStateSubscription.
+
+Can't perform a React state update on a component that hasn't mounted yet. This indicates that you have a side-effect in your render function that asynchronously later calls tries to update the component. Move this work to useEffect instead.
+[Layout children]: No route named "(drawer)" exists in nested children: 
+(5) ["+not-found", "about", "_sitemap", "(tabs)", "biography/birth"]
+React.jsx: type is invalid -- expected a string (for built-in components) or a class/function (for composite components) but got: undefined. You likely forgot to export your component from the file it's defined in, or you might have mixed up default and named imports.
+[Layout children]: No route named "(drawer)" exists in nested children: 
+(5) ["+not-found", "about", "_sitemap", "(tabs)", "biography/birth"]
+React.jsx: type is invalid -- expected a string (for built-in components) or a class/function (for composite components) but got: undefined. You likely forgot to export your component from the file it's defined in, or you might have mixed up default and named imports.
+<div class="luna-console-preview" data-id="41"><div class="luna-console-preview-container"><div class="luna-console-preview-icon-container"><span class="luna-console-icon luna-console-icon-caret-right"></span></div><span class="luna-console-preview-content-container"><span class="luna-console-descriptor">Error</span> <span class="luna-console-object-preview">{<span class="luna-console-key">componentStack</span>: <span class="luna-console-string">&quot;↵    at div (&lt;anonymous&gt;)↵    at View…&quot;</span>}</span></span></div><div class="luna-console-json luna-console-hidden"></div></div>
+
+The above error occurred in the <div> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, LogBoxStateSubscription.
+
