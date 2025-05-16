@@ -76,23 +76,117 @@ export default function PlacesScreen() {
             )}
             keyExtractor={item => item.id}
             horizontal
+            showsHorizontalScrolimport React from 'react';
+import { StyleSheet, Text, View, ScrollView, Image, FlatList, TouchableOpacity } from 'react-native';
+import { useColorScheme } from '@/hooks/useColorScheme';
+import Colors from '@/constants/Colors';
+import Header from '@/components/Header';
+import { LinearGradient } from 'expo-linear-gradient';
+
+function PlaceCard({ name, image, description }) {
+  const colorScheme = useColorScheme();
+  
+  return (
+    <TouchableOpacity 
+      style={styles.placeCard}
+      activeOpacity={0.9}
+    >
+      <Image 
+        source={image}
+        style={styles.placeImage}
+        resizeMode="cover"
+      />
+      <LinearGradient
+        colors={['transparent', 'rgba(0,0,0,0.7)']}
+        style={styles.gradient}
+      >
+        <Text style={styles.placeName}>{name}</Text>
+        <Text style={styles.placeDescription}>
+          {description.length > 50 ? description.substring(0, 50) + '...' : description}
+        </Text>
+      </LinearGradient>
+    </TouchableOpacity>
+  );
+}
+
+export default function PlacesScreen() {
+  const colorScheme = useColorScheme();
+  
+  const places = [
+    {
+      id: 'mecca',
+      name: 'مكة المكرمة',
+      image: require('@/assets/images/mecca.png'),
+      description: 'مسقط رأس النبي محمد ﷺ ومكان نزول الوحي',
+    },
+    {
+      id: 'medina',
+      name: 'المدينة المنورة',
+      image: require('@/assets/images/medina.png'),
+      description: 'المدينة التي هاجر إليها النبي ﷺ وبنى فيها أول مسجد',
+    },
+    {
+      id: 'jerusalem',
+      name: 'القدس',
+      image: require('@/assets/images/jerusalem.png'),
+      description: 'المسجد الأقصى ومسرى النبي ﷺ ليلة الإسراء والمعراج',
+    },
+    {
+      id: 'cave',
+      name: 'غار حراء',
+      image: require('@/assets/images/cave.png'),
+      description: 'المكان الذي نزل فيه الوحي لأول مرة على النبي ﷺ',
+    },
+    {
+      id: 'taif',
+      name: 'الطائف',
+      image: require('@/assets/images/taif.png'),
+      description: 'المدينة التي ذهب إليها النبي ﷺ للدعوة',
+    },
+  ];
+
+  return (
+    <View style={[styles.container, { backgroundColor: Colors[colorScheme].background }]}>
+      <Header title="الأماكن المقدسة" />
+      <ScrollView style={styles.scrollView}>
+        <View style={styles.introContainer}>
+          <Text style={[styles.introTitle, { color: Colors[colorScheme].text }]}>
+            الأماكن المرتبطة بحياة النبي ﷺ
+          </Text>
+          <Text style={[styles.introText, { color: Colors[colorScheme].textSecondary }]}>
+            تعرف على الأماكن التي ارتبطت بحياة النبي محمد ﷺ وشهدت أحداث مهمة في السيرة النبوية
+          </Text>
+        </View>
+        
+        <View style={styles.placesContainer}>
+          <FlatList
+            data={places}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => (
+              <PlaceCard
+                name={item.name}
+                image={item.image}
+                description={item.description}
+              />
+            )}
+            horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.carousel}
           />
         </View>
         
         <View style={styles.importanceSection}>
-          <ThemedText type="subtitle" style={styles.sectionTitle}>
+          <Text style={[styles.sectionTitle, { color: Colors[colorScheme].text }]}>
             أهمية هذه الأماكن
-          </ThemedText>
-          <ThemedView style={styles.importanceCard}>
-            <ThemedText style={styles.importanceText}>
+          </Text>
+          <View style={[styles.importanceCard, { backgroundColor: colorScheme === 'dark' ? '#2A2A2A' : '#F5F5F5' }]}>
+            <Textmestyle={[styles.importanceText, { color: Colors[colorScheme].text }]}>
               تحمل هذه الأماكن أهمية كبيرة في تاريخ الإسلام لارتباطها بحياة النبي محمد صلى الله عليه وسلم وأحداث السيرة النبوية. تعتبر هذه المواقع شاهدة على أحداث مهمة في تاريخ الإسلام، من مولد النبي ونشأته في مكة، إلى الهجرة للمدينة وتأسيس الدولة الإسلامية الأولى.
-            </ThemedText>
-          </ThemedView>
+            </Text>
+          </View>
         </View>
       </ScrollView>
-    </ThemedView>
+    </View>
   );
 }
 
@@ -103,10 +197,80 @@ const styles = StyleSheet.create({
   scrollView: {
     flex: 1,
   },
-  content: {
-    paddingBottom: 32,
+  introContainer: {
+    padding: 20,
   },
-  intro: {
+  introTitle: {
+    fontFamily: 'AmiriBold',
+    fontSize: 22,
+    marginBottom: 10,
+    textAlign: 'center',
+  },
+  introText: {
+    fontFamily: 'Amiri',
+    fontSize: 16,
+    lineHeight: 24,
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  placesContainer: {
+    marginBottom: 20,
+  },
+  carousel: {
+    paddingHorizontal: 15,
+  },
+  placeCard: {
+    width: 250,
+    height: 180,
+    marginRight: 15,
+    borderRadius: 12,
+    overflow: 'hidden',
+  },
+  placeImage: {
+    width: '100%',
+    height: '100%',
+  },
+  gradient: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: '50%',
+    paddingHorizontal: 15,
+    paddingBottom: 15,
+    justifyContent: 'flex-end',
+  },
+  placeName: {
+    fontFamily: 'AmiriBold',
+    fontSize: 18,
+    color: '#FFFFFF',
+    marginBottom: 5,
+  },
+  placeDescription: {
+    fontFamily: 'Amiri',
+    fontSize: 14,
+    color: 'rgba(255,255,255,0.9)',
+  },
+  importanceSection: {
+    padding: 20,
+  },
+  sectionTitle: {
+    fontFamily: 'AmiriBold',
+    fontSize: 20,
+    marginBottom: 15,
+    textAlign: 'center',
+  },
+  importanceCard: {
+    padding: 15,
+    borderRadius: 12,
+  },
+  importanceText: {
+    fontFamily: 'Amiri',
+    fontSize: 16,
+    lineHeight: 24,
+    textAlign: 'justify',
+  },
+}); {
     padding: 16,
     marginBottom: 16,
   },

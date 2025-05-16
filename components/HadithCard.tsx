@@ -1,11 +1,23 @@
 
 import React, { useState } from 'react';
-import { StyleSheet, TouchableOpacity, View, Dimensions } from 'react-native';
-import { ThemedText } from './ThemedText';
-import { ThemedView } from './ThemedView';
+import { StyleSheet, TouchableOpacity, View, Text } from 'react-native';
 import { Feather } from '@expo/vector-icons';
-import Animated, { useAnimatedStyle, withTiming, useSharedValue } from 'react-native-reanimated';
-import { useThemeColor } from '@/hooks/useThemeColor';
+import { useColorScheme } from '@/hooks/useColorScheme';
+import Colors from '@/constants/Colors';
+
+type HadithCardProps = {
+  hadith: string;
+  source: string;
+  explanation?: string;
+};
+
+export default function HadithCard({ hadith, source, explanation }: HadithCardProps) {
+  const [expanded, setExpanded] = useState(false);
+  const colorScheme = useColorScheme();
+  
+  const toggleExpand = () => {
+    setExpanded(prev => !prev);
+  };
 
 interface HadithCardProps {
   hadith: string;
@@ -42,21 +54,26 @@ export function HadithCard({ hadith, source, explanation }: HadithCardProps) {
   });
 
   return (
-    <ThemedView
-      style={[styles.container, { borderColor }]}
-      lightColor="rgba(255,255,255,0.7)"
-      darkColor="rgba(36,39,40,0.7)"
+    <View
+      style={[
+        styles.container, 
+        { 
+          borderColor: colorScheme === 'dark' 
+            ? 'rgba(255,255,255,0.1)' 
+            : 'rgba(0,0,0,0.1)' 
+        }
+      ]}
     >
       <View style={styles.header}>
-        <ThemedText type="defaultSemiBold" style={styles.hadithText}>
+        <Text style={[styles.hadithText, { color: Colors[colorScheme].text }]}>
           {hadith}
-        </ThemedText>
+        </Text>
       </View>
       
       <View style={styles.sourceContainer}>
-        <ThemedText style={styles.source}>
+        <Text style={[styles.source, { color: Colors[colorScheme].textSecondary }]}>
           {source}
-        </ThemedText>
+        </Text>
       </View>
       
       {explanation && (
@@ -66,21 +83,80 @@ export function HadithCard({ hadith, source, explanation }: HadithCardProps) {
             onPress={toggleExpand}
             activeOpacity={0.7}
           >
-            <ThemedText style={{ color: tintColor }}>
+            <Text style={[styles.expandButtonText, { color: Colors[colorScheme].tint }]}>
               {expanded ? 'إخفاء التفسير' : 'عرض التفسير'}
-            </ThemedText>
-            <Animated.View style={iconStyle}>
-              <Feather name="chevron-down" size={16} color={tintColor} />
-            </Animated.View>
+            </Text>
+            <Feather 
+              name={expanded ? "chevron-up" : "chevron-down"} 
+              size={16} 
+              color={Colors[colorScheme].tint} 
+              style={styles.expandIcon}
+            />
           </TouchableOpacity>
           
-          <Animated.View style={contentStyle}>
-            <ThemedText style={styles.explanation}>
-              {explanation}
-            </ThemedText>
-          </Animated.View>
+          {expanded && (
+            <View style={styles.explanationContainer}>
+              <Text style={[styles.explanation, { color: Colors[colorScheme].text }]}>
+                {explanation}
+              </Text>
+            </View>
+          )}
         </>
       )}
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    marginBottom: 20,
+    padding: 15,
+    borderRadius: 10,
+    borderWidth: 1,
+  },
+  header: {
+    marginBottom: 10,
+  },
+  hadithText: {
+    fontFamily: 'AmiriBold',
+    fontSize: 16,
+    lineHeight: 26,
+    textAlign: 'right',
+  },
+  sourceContainer: {
+    marginBottom: 10,
+    alignItems: 'flex-start',
+  },
+  source: {
+    fontFamily: 'Amiri',
+    fontSize: 14,
+  },
+  expandButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: 5,
+  },
+  expandButtonText: {
+    fontFamily: 'Amiri',
+    fontSize: 14,
+    marginRight: 5,
+  },
+  expandIcon: {
+    marginTop: 2,
+  },
+  explanationContainer: {
+    marginTop: 10,
+    padding: 10,
+    backgroundColor: 'rgba(200,200,200,0.1)',
+    borderRadius: 8,
+  },
+  explanation: {
+    fontFamily: 'Amiri',
+    fontSize: 14,
+    lineHeight: 22,
+  },
+});
     </ThemedView>
   );
 }

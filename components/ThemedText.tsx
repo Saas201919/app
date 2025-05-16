@@ -1,60 +1,57 @@
-import { StyleSheet, Text, type TextProps } from 'react-native';
-
+import { Text, TextProps } from 'react-native';
+import { useColorScheme } from '@/hooks/useColorScheme';
 import { useThemeColor } from '@/hooks/useThemeColor';
 
 export type ThemedTextProps = TextProps & {
   lightColor?: string;
   darkColor?: string;
-  type?: 'default' | 'title' | 'defaultSemiBold' | 'subtitle' | 'link';
+  type?: 'default' | 'title' | 'subtitle' | 'defaultSemiBold' | 'link';
 };
 
-export function ThemedText({
-  style,
-  lightColor,
-  darkColor,
-  type = 'default',
-  ...rest
-}: ThemedTextProps) {
+export function ThemedText(props: ThemedTextProps) {
+  const { style, lightColor, darkColor, type = 'default', ...otherProps } = props;
   const color = useThemeColor({ light: lightColor, dark: darkColor }, 'text');
+  const colorScheme = useColorScheme();
+
+  let fontFamily;
+  let fontSize;
+  let fontWeight;
+  let additionalStyle = {};
+
+  switch (type) {
+    case 'title':
+      fontFamily = 'AmiriBold';
+      fontSize = 22;
+      break;
+    case 'subtitle':
+      fontFamily = 'AmiriBold';
+      fontSize = 18;
+      break;
+    case 'defaultSemiBold':
+      fontFamily = 'AmiriBold';
+      fontSize = 16;
+      break;
+    case 'link':
+      fontFamily = 'Amiri';
+      fontSize = 16;
+      additionalStyle = {
+        color: colorScheme === 'dark' ? '#69B4FF' : '#0A84FF',
+        textDecorationLine: 'underline',
+      };
+      break;
+    default:
+      fontFamily = 'Amiri';
+      fontSize = 16;
+  }
 
   return (
     <Text
       style={[
-        { color },
-        type === 'default' ? styles.default : undefined,
-        type === 'title' ? styles.title : undefined,
-        type === 'defaultSemiBold' ? styles.defaultSemiBold : undefined,
-        type === 'subtitle' ? styles.subtitle : undefined,
-        type === 'link' ? styles.link : undefined,
+        { color, fontFamily, fontSize, fontWeight },
+        additionalStyle,
         style,
       ]}
-      {...rest}
+      {...otherProps}
     />
   );
 }
-
-const styles = StyleSheet.create({
-  default: {
-    fontSize: 16,
-    lineHeight: 24,
-  },
-  defaultSemiBold: {
-    fontSize: 16,
-    lineHeight: 24,
-    fontWeight: '600',
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    lineHeight: 32,
-  },
-  subtitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  link: {
-    lineHeight: 30,
-    fontSize: 16,
-    color: '#0a7ea4',
-  },
-});

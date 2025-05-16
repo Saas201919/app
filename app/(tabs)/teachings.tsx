@@ -1,11 +1,12 @@
-
 import React from 'react';
-import { StyleSheet, ScrollView, View } from 'react-native';
+import { StyleSheet, ScrollView, View, Text } from 'react-native';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
 import { Header } from '@/components/Header';
 import { Sidebar } from '@/components/Sidebar';
 import { HadithCard } from '@/components/HadithCard';
+import Colors from '@/constants/Colors';
+import useColorScheme from '@/hooks/useColorScheme';
 
 const hadithData = [
   {
@@ -30,7 +31,7 @@ const hadithData = [
     id: 'hadith4',
     text: 'البر حسن الخلق، والإثم ما حاك في صدرك وكرهت أن يطلع عليه الناس.',
     source: 'رواه مسلم',
-    explanation: 'يوضح هذا الحديث مفهوم البر والإثم، فالبر هو حسن الخلق الذي يتحلى به المسلم، والإثم هو ما يشعر المرء بعدم ارتياح في نفسه عند فعله ويكره أن يطلع الناس عليه.',
+    explanation: 'يبين هذا الحديث معيار البر والإثم، فالبر هو حسن الخلق، والإثم ما تردد في النفس وشك فيه الإنسان وخشي أن يطلع عليه الناس.',
   },
   {
     id: 'hadith5',
@@ -53,30 +54,32 @@ const hadithData = [
 ];
 
 export default function TeachingsScreen() {
+  const colorScheme = useColorScheme();
   return (
-    <ThemedView style={styles.container}>
+    <View style={[styles.container, { backgroundColor: Colors[colorScheme].background }]}>
       <Header title="الأحاديث النبوية" />
-      <Sidebar />
-      
-      <ScrollView style={styles.scrollView} contentContainerStyle={styles.content}>
-        <View style={styles.intro}>
-          <ThemedText style={styles.introText}>
-            مجموعة من الأحاديث النبوية الصحيحة التي تحتوي على الحكمة والتعاليم الإسلامية
-          </ThemedText>
+      <ScrollView style={styles.scrollView}>
+        <View style={styles.introContainer}>
+          <Text style={[styles.introTitle, { color: Colors[colorScheme].text }]}>
+            من أحاديث الرسول ﷺ
+          </Text>
+          <Text style={[styles.introText, { color: Colors[colorScheme].textSecondary }]}>
+            مجموعة مختارة من أحاديث النبي محمد صلى الله عليه وسلم، وما فيها من حكم وتوجيهات لحياة المسلم.
+          </Text>
         </View>
-        
-        <View style={styles.hadithList}>
-          {hadithData.map((hadith) => (
+
+        <View style={styles.hadithsContainer}>
+          {hadithData.map((item) => (
             <HadithCard
-              key={hadith.id}
-              hadith={hadith.text}
-              source={hadith.source}
-              explanation={hadith.explanation}
+              key={item.id}
+              hadith={item.text}
+              source={item.source}
+              explanation={item.explanation}
             />
           ))}
         </View>
       </ScrollView>
-    </ThemedView>
+    </View>
   );
 }
 
@@ -87,12 +90,15 @@ const styles = StyleSheet.create({
   scrollView: {
     flex: 1,
   },
-  content: {
-    paddingBottom: 32,
+  introContainer: {
+    padding: 20,
+    marginBottom: 10,
   },
-  intro: {
-    padding: 16,
-    marginBottom: 16,
+  introTitle: {
+    fontFamily: 'AmiriBold',
+    fontSize: 22,
+    marginBottom: 10,
+    textAlign: 'center',
   },
   introText: {
     fontFamily: 'Amiri',
@@ -100,7 +106,41 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     textAlign: 'center',
   },
-  hadithList: {
-    paddingHorizontal: 16,
+  hadithsContainer: {
+    padding: 15,
+  },
+  hadithCard: {
+    marginBottom: 20,
+    padding: 15,
+    borderRadius: 10,
+    borderWidth: 1,
+  },
+  hadithText: {
+    fontFamily: 'AmiriBold',
+    fontSize: 16,
+    lineHeight: 26,
+    marginBottom: 10,
+    textAlign: 'right',
+  },
+  sourceText: {
+    fontFamily: 'Amiri',
+    fontSize: 14,
+    marginBottom: 10,
+    textAlign: 'left',
+  },
+  expandButton: {
+    fontFamily: 'Amiri',
+    fontSize: 14,
+    marginVertical: 8,
+    textAlign: 'center',
+  },
+  explanationText: {
+    fontFamily: 'Amiri',
+    fontSize: 14,
+    lineHeight: 22,
+    marginTop: 10,
+    padding: 10,
+    backgroundColor: 'rgba(200,200,200,0.1)',
+    borderRadius: 8,
   },
 });
