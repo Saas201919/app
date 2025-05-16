@@ -26,7 +26,7 @@ export default function RootLayout() {
 
   useEffect(() => {
     if (loaded) {
-      SplashScreen.hideAsync();hideAsync();
+      SplashScreen.hideAsync();
     }
   }, [loaded]);
 
@@ -43,7 +43,7 @@ export default function RootLayout() {
           <Stack.Screen name="about" options={{ title: 'حول التطبيق' }} />
           <Stack.Screen name="biography/birth" options={{ title: 'مولد النبي' }} />
         </Stack>
-        <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} /> style={colorScheme === 'dark' ? 'light' : 'dark'} />
+        <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
       </SidebarProvider>
     </ThemeProvider>
   );
